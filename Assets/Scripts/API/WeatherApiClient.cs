@@ -23,6 +23,7 @@ namespace WeatherApp.Services
         /// </summary>
         /// <param name="city">City name to get weather for</param>
         /// <returns>WeatherData object or null if failed</returns>
+        
         public async Task<WeatherData> GetWeatherDataAsync(string city)
         {
             // Validate input parameters
@@ -39,15 +40,24 @@ namespace WeatherApp.Services
                 return null;
             }
             
-            // TODO: Build the complete URL with city and API key
-            string url = $"";
+         
+          string url = $"{baseUrl}?q={city}&appid={ApiConfig.OpenWeatherMapApiKey}";
             
-            // TODO: Create UnityWebRequest and use modern async pattern
+            
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                // TODO: Use async/await, send the request and wait for response
-                
-                // TODO: Implement proper error handling for different result types
+               
+                await request.SendWebRequest();
+
+               
+
+                switch (request.result)
+        {
+            case UnityWebRequest.Result.Success:
+               return ParseWeatherData (request.downloadHandler.text);
+        }        
+
+        
                 // Check request.result for Success, ConnectionError, ProtocolError, DataProcessingError
                 
                 // TODO: Parse JSON response using Newtonsoft.Json
