@@ -5,13 +5,13 @@ namespace WeatherApp.Data
 {
     /// <summary>
     /// Main weather data structure matching OpenWeatherMap API response
-  
+
     /// </summary>
     [Serializable]
     public class WeatherData
     {
-        
-       [JsonProperty("main")]
+
+        [JsonProperty("main")]
         public MainWeatherInfo Main { get; set; }
 
         [JsonProperty("weather")]
@@ -22,23 +22,26 @@ namespace WeatherApp.Data
 
         [JsonProperty("cod")]
         public int StatusCode { get; set; }
-        
+
         // Helper properties for easier data access
         public float TemperatureInCelsius => Main?.Temperature - 273.15f ?? 0f;
+        public float FeelsLikeInCelsius => Main?.FeelsLike - 273.15f ?? 0f;
+        public int Humidity => Main?.Humidity ?? 0;
+        public int Pressure => Main?.Pressure ?? 0;
         public string PrimaryDescription => Weather?.Length > 0 ? Weather[0].Description : "Unknown";
-        
+
         // Validation method
         public bool IsValid => StatusCode == 200 && Main != null && !string.IsNullOrEmpty(CityName);
     }
 
     /// <summary>
     /// Main weather information (temperature, humidity, etc.)
-    
+
     /// </summary>
     [Serializable]
     public class MainWeatherInfo
     {
-         [JsonProperty("temp")]
+        [JsonProperty("temp")]
         public float Temperature { get; set; }
 
         [JsonProperty("feels_like")]

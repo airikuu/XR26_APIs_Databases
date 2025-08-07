@@ -17,10 +17,10 @@ namespace WeatherApp.UI
         [SerializeField] private Button getWeatherButton;
         [SerializeField] private TextMeshProUGUI weatherDisplayText;
         [SerializeField] private TextMeshProUGUI statusText;
-        
+
         [Header("API Client")]
         [SerializeField] private WeatherApiClient apiClient;
-        
+
         private void Start()
         {
             // Set up button click listener
@@ -29,38 +29,38 @@ namespace WeatherApp.UI
             // Initialize UI state
             SetStatusText("Enter a city name and click Get Weather");
         }
-        
+
         /// TODO: Students will implement this method
         private async void OnGetWeatherClicked()
         {
             // Get city name from input field
             string cityName = cityInputField.text;
-            
+
             // Validate input
             if (string.IsNullOrWhiteSpace(cityName))
             {
                 SetStatusText("Please enter a city name");
                 return;
             }
-            
+
             // Disable button and show loading state
             getWeatherButton.interactable = false;
             SetStatusText("Loading weather data...");
             weatherDisplayText.text = "";
-            
+
             try
             {
-                  var weatherData = await apiClient.GetWeatherDataAsync(cityName);
-            
-            if (weatherData != null && weatherData.IsValid)
-            {
-                DisplayWeatherData(weatherData);
-                SetStatusText("Weather data loaded successfully");
-            }
-            else
-            {
-                SetStatusText("Failed to get weather data. Please try again.");
-            }
+                var weatherData = await apiClient.GetWeatherDataAsync(cityName);
+
+                if (weatherData != null && weatherData.IsValid)
+                {
+                    DisplayWeatherData(weatherData);
+                    SetStatusText("Weather data loaded successfully");
+                }
+                else
+                {
+                    SetStatusText("Failed to get weather data. Please try again.");
+                }
             }
             catch (System.Exception ex)
             {
@@ -74,24 +74,27 @@ namespace WeatherApp.UI
                 getWeatherButton.interactable = true;
             }
         }
-        
-      
+
         private void DisplayWeatherData(WeatherData weatherData)
         {
-           
-
             string displayText = "";
-            
-            
+
             if (weatherData.Main != null)
             {
-                displayText += $"The temperature is {weatherData.Main.Temperature} kelvin\n";
-                displayText += $"It feels like the weather is {weatherData.Main.FeelsLike} kelvin";
+                displayText += $"City: {weatherData.CityName}\n";
+                displayText += $"Temperature: {weatherData.TemperatureInCelsius:F1}°C (Feels like: {weatherData.FeelsLikeInCelsius:F1}°C)\n";
+                displayText += $"Humidity: {weatherData.Humidity}%\n";
+                displayText += $"Pressure: {weatherData.Pressure} hPa\n";
             }
-            
+
+            if (weatherData.Weather != null && weatherData.Weather.Length > 0)
+            {
+                displayText += $"Description: {weatherData.PrimaryDescription}";
+            }
+
             weatherDisplayText.text = displayText;
         }
-        
+
         private void SetStatusText(string message)
         {
             if (statusText != null)
@@ -99,7 +102,7 @@ namespace WeatherApp.UI
                 statusText.text = message;
             }
         }
-        
+
         public void ClearDisplay()
         {
             weatherDisplayText.text = "";
