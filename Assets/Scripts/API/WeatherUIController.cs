@@ -50,10 +50,17 @@ namespace WeatherApp.UI
             
             try
             {
-                // TODO: Call API client to get weather data
-              
-                
-                // TODO: Handle the response
+                  var weatherData = await apiClient.GetWeatherDataAsync(cityName);
+            
+            if (weatherData != null && weatherData.IsValid)
+            {
+                DisplayWeatherData(weatherData);
+                SetStatusText("Weather data loaded successfully");
+            }
+            else
+            {
+                SetStatusText("Failed to get weather data. Please try again.");
+            }
             }
             catch (System.Exception ex)
             {
@@ -68,24 +75,18 @@ namespace WeatherApp.UI
             }
         }
         
-        /// TODO: Students will implement this method
+      
         private void DisplayWeatherData(WeatherData weatherData)
         {
-            // TODO: Format and display weather information
-            // Example format:
-            // City: London
-            // Temperature: 15.2°C (Feels like: 14.1°C)
-            // Description: Clear sky
-            // Humidity: 65%
-            // Pressure: 1013 hPa
+           
 
             string displayText = "";
             
-            // TODO: Add more weather details
+            
             if (weatherData.Main != null)
             {
-                displayText += "";
-                displayText += "";
+                displayText += $"The temperature is {weatherData.Main.Temperature} kelvin\n";
+                displayText += $"It feels like the weather is {weatherData.Main.FeelsLike} kelvin";
             }
             
             weatherDisplayText.text = displayText;

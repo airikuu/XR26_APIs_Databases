@@ -58,7 +58,7 @@ namespace WeatherApp.Data
     [Serializable]
     public class WeatherDescription
     {
-       [JsonProperty("main")]
+        [JsonProperty("main")]
         public string Main { get; set; }
 
         [JsonProperty("description")]
@@ -66,4 +66,5 @@ namespace WeatherApp.Data
 
         [JsonProperty("icon")]
         public string Icon { get; set; }
+    }
 }
